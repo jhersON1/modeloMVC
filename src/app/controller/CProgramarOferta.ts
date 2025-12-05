@@ -7,18 +7,24 @@ import { DataBaseConnection } from '../bd/DataBaseConnection';
 /**
  * CProgramarOferta
  * Controlador para programar ofertas académicas
+ * Orquesta la comunicación entre la Vista y los Modelos
  */
 export class CProgramarOferta {
-    private vista: VProgramarOferta;
+    private vista!: VProgramarOferta;
     private modeloOferta: MProgramarOferta;
     private modeloAsignatura: MAsignatura;
     private modeloDocente: MDocente;
 
     constructor() {
-        this.vista = new VProgramarOferta();
         this.modeloOferta = new MProgramarOferta();
         this.modeloAsignatura = new MAsignatura();
         this.modeloDocente = new MDocente();
+    }
+
+    // Método para vincular la vista al controlador
+    setVista(vista: VProgramarOferta): void {
+        this.vista = vista;
+        this.vista.setController(this);
     }
 
     // + iniciarVista() : void
@@ -39,6 +45,7 @@ export class CProgramarOferta {
             cupo: cupo
         };
 
+        // Manda guardar al modelo MProgramarOferta
         const resultado = this.modeloOferta.insertarOferta(datos);
 
         if (resultado) {
@@ -66,16 +73,5 @@ export class CProgramarOferta {
         const periodos = DataBaseConnection.periodos;
         db.desconectar();
         this.vista.setPeriodos(periodos);
-    }
-
-    // Método para obtener la vista (útil para integración con Angular)
-    public getVista(): VProgramarOferta {
-        return this.vista;
-    }
-
-    // Método para procesar el registro desde la vista
-    public procesarRegistro(): void {
-        const datos = this.vista.getDatosSeleccionados();
-        this.guardarOferta(datos.idAsig, datos.idDoc, datos.idPer, datos.cupo);
     }
 }

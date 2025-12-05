@@ -1,3 +1,8 @@
+import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { CProgramarOferta } from '../controller/CProgramarOferta';
+
 /**
  * DTO para los datos seleccionados en la vista
  */
@@ -10,35 +15,53 @@ export interface DTO {
 
 /**
  * VProgramarOferta
- * Vista para programar ofertas académicas
+ * Vista (Componente Angular) para programar ofertas académicas
  */
-export class VProgramarOferta {
+@Component({
+    selector: 'app-vprogramar-oferta',
+    standalone: true,
+    imports: [CommonModule, FormsModule],
+    templateUrl: './VProgramarOferta.html',
+    styleUrls: ['./VProgramarOferta.css']
+})
+export class VProgramarOferta implements OnInit {
     // - cmbAsignatura: ComboBox
-    private cmbAsignatura: { id: number; nombre: string }[] = [];
+    cmbAsignatura: { id: number; nombre: string }[] = [];
     // - cmbDocente: ComboBox
-    private cmbDocente: { id: number; nombre: string }[] = [];
+    cmbDocente: { id: number; nombre: string }[] = [];
     // - cmbPeriodo: ComboBox
-    private cmbPeriodo: { id: number; nombre: string }[] = [];
+    cmbPeriodo: { id: number; nombre: string }[] = [];
     // - btnRegistrar: Button
-    private btnRegistrar: boolean = true;
+    btnRegistrar: boolean = true;
 
     // Valores seleccionados
-    private asignaturaSeleccionada: number = 0;
-    private docenteSeleccionado: number = 0;
-    private periodoSeleccionado: number = 0;
-    private cupoSeleccionado: number = 0;
+    asignaturaSeleccionada: number = 0;
+    docenteSeleccionado: number = 0;
+    periodoSeleccionado: number = 0;
+    cupoSeleccionado: number = 0;
+
+    // Controlador
+    private controller!: CProgramarOferta;
+
+    ngOnInit(): void {
+        // El controlador se inyecta desde afuera
+    }
+
+    // Método para recibir el controlador
+    setController(controller: CProgramarOferta): void {
+        this.controller = controller;
+    }
 
     // + mostrar() : void
-    public mostrar(): void {
+    mostrar(): void {
         console.log('=== VISTA: Programar Oferta ===');
         console.log('Asignaturas disponibles:', this.cmbAsignatura);
         console.log('Docentes disponibles:', this.cmbDocente);
         console.log('Periodos disponibles:', this.cmbPeriodo);
-        console.log('Botón Registrar:', this.btnRegistrar ? 'Habilitado' : 'Deshabilitado');
     }
 
     // + getDatosSeleccionados() : DTO
-    public getDatosSeleccionados(): DTO {
+    getDatosSeleccionados(): DTO {
         return {
             idAsig: this.asignaturaSeleccionada,
             idDoc: this.docenteSeleccionado,
@@ -48,51 +71,29 @@ export class VProgramarOferta {
     }
 
     // + mensajeExito() : void
-    public mensajeExito(): void {
+    mensajeExito(): void {
         console.log('✓ ¡Oferta registrada exitosamente!');
         alert('¡Oferta registrada exitosamente!');
     }
 
-    // Métodos para cargar los ComboBox
-    public setAsignaturas(asignaturas: any[]): void {
+    // Método del botón registrar - llama al controlador
+    onRegistrar(): void {
+        if (this.controller) {
+            const datos = this.getDatosSeleccionados();
+            this.controller.guardarOferta(datos.idAsig, datos.idDoc, datos.idPer, datos.cupo);
+        }
+    }
+
+    // Métodos para cargar los ComboBox (llamados por el controlador)
+    setAsignaturas(asignaturas: any[]): void {
         this.cmbAsignatura = asignaturas;
     }
 
-    public setDocentes(docentes: any[]): void {
+    setDocentes(docentes: any[]): void {
         this.cmbDocente = docentes;
     }
 
-    public setPeriodos(periodos: any[]): void {
+    setPeriodos(periodos: any[]): void {
         this.cmbPeriodo = periodos;
-    }
-
-    // Métodos para establecer las selecciones
-    public setAsignaturaSeleccionada(id: number): void {
-        this.asignaturaSeleccionada = id;
-    }
-
-    public setDocenteSeleccionado(id: number): void {
-        this.docenteSeleccionado = id;
-    }
-
-    public setPeriodoSeleccionado(id: number): void {
-        this.periodoSeleccionado = id;
-    }
-
-    public setCupo(cupo: number): void {
-        this.cupoSeleccionado = cupo;
-    }
-
-    // Getters para los ComboBox
-    public getAsignaturas(): any[] {
-        return this.cmbAsignatura;
-    }
-
-    public getDocentes(): any[] {
-        return this.cmbDocente;
-    }
-
-    public getPeriodos(): any[] {
-        return this.cmbPeriodo;
     }
 }

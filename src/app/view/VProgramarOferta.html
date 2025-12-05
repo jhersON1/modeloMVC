@@ -1,0 +1,54 @@
+<div class="programar-oferta-container">
+    <h2>Programar Oferta Académica</h2>
+    
+    <form class="form-oferta">
+        <!-- cmbAsignatura: ComboBox -->
+        <div class="form-group">
+            <label for="asignatura">Asignatura:</label>
+            <select id="asignatura" [(ngModel)]="asignaturaSeleccionada" name="asignatura">
+                <option [value]="0">-- Seleccione Asignatura --</option>
+                <option *ngFor="let asig of cmbAsignatura" [value]="asig.id">
+                    {{ asig.nombre }}
+                </option>
+            </select>
+        </div>
+
+        <!-- cmbDocente: ComboBox -->
+        <div class="form-group">
+            <label for="docente">Docente:</label>
+            <select id="docente" [(ngModel)]="docenteSeleccionado" name="docente">
+                <option [value]="0">-- Seleccione Docente --</option>
+                <option *ngFor="let doc of cmbDocente" [value]="doc.id">
+                    {{ doc.nombre }}
+                </option>
+            </select>
+        </div>
+
+        <!-- cmbPeriodo: ComboBox -->
+        <div class="form-group">
+            <label for="periodo">Periodo:</label>
+            <select id="periodo" [(ngModel)]="periodoSeleccionado" name="periodo">
+                <option [value]="0">-- Seleccione Periodo --</option>
+                <option *ngFor="let per of cmbPeriodo" [value]="per.id">
+                    {{ per.nombre }}
+                </option>
+            </select>
+        </div>
+
+        <!-- Campo Cupo -->
+        <div class="form-group">
+            <label for="cupo">Cupo:</label>
+            <input type="number" id="cupo" [(ngModel)]="cupoSeleccionado" name="cupo" min="1" placeholder="Ingrese el cupo">
+        </div>
+
+        <!-- btnRegistrar: Button -->
+        <div class="form-group">
+            <button type="button" 
+                    [disabled]="!btnRegistrar" 
+                    (click)="onRegistrar()" 
+                    class="btn-registrar">
+                Registrar
+            </button>
+        </div>
+    </form>
+</div>
